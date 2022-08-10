@@ -4,7 +4,7 @@
       class="quiz-main"
       v-for="(query, id) in questions"
       :key="query.id"
-      v-show="move === id"
+      v-show="moveNext === id"
       ref="ask"
     >
       <div>
@@ -14,9 +14,9 @@
         <div class="box-suggestions">
           <ul>
             <li
-              v-for="(answer, index) in query.seggestions"
+              v-for="answer in query.seggestions"
               :key="answer"
-              @click="checkAnswer(index)"
+              @click.prevent="checkAnswer(answer.suggestion, id)"
             >
               {{ answer.suggestion }}
             </li>
@@ -31,7 +31,7 @@
 export default {
   data() {
     return {
-      move: 0,
+      correct: 0,
       questions: [
         {
           question: "inside which HTML element do we put ja",
@@ -74,13 +74,20 @@ export default {
       ],
     };
   },
+  props: {
+    moveNext: Number,
+  },
   methods: {
-    checkAnswer() {
-      // console.log(this.questions.seggestions.suggestion[index])
+    checkAnswer(seggestion, id) {
+      //  console.log(this.questions.correct_Suggestion[id]);
+      if (seggestion === this.questions[id].correct_Suggestion) {
+        this.correct++;
+        // console.log(this.correct);
+      }
     },
-    sendEmit() {
-      this.$emit("whereHere", "mix my boy");
-    },
+  },
+  mounted() {
+    this.$emit("correctchoice", this.correct);
   },
 };
 </script>
